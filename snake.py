@@ -14,9 +14,9 @@ class Snake(object):
 
     def draw_snake(self):
         # creating each snake body element
-        for elements in self.body:
+        for element in self.body:
             snake_rect = pygame.Rect(
-                elements.x * cell_size, elements.y * cell_size, cell_size, cell_size)
+                element.x * cell_size, element.y * cell_size, cell_size, cell_size)
 
             pygame.draw.rect(window, (0, 255, 0), snake_rect)
 
@@ -54,9 +54,10 @@ class Food(object):
 
 
 class MainGame(object):
-    def __init__(self):
+    def __init__(self, points=0):
         self.snake = Snake()
         self.food = Food()
+        self.points = points
 
     def draw_elements(self):
         self.snake.draw_snake()
@@ -65,14 +66,30 @@ class MainGame(object):
     def update(self):
         self.snake.move_snake()
         self.check_food_collision()
+        self.check_snake_collision()
 
     def check_food_collision(self):
         # if snake took the food
         if self.food.food_position == self.snake.body[0]:
             print('Food')
+            self.points += 1
             # spawning new food
             self.food.random_food_position()
             self.snake.grow_snake()
+
+    def check_snake_collision(self):
+        # checking if the snake head hits his body
+        for element in self.snake.body[1:]:
+            if element == self.snake.body[0]:
+                print('Game Over!')
+                pygame.quit()
+                sys.exit()
+
+        # checking if the snake hits the screen edge
+        if not 0 <= self.snake.body[0].x <= cell_numbers or not 0 <= self.snake.body[0].y <= cell_numbers:
+            print('Game Over!')
+            pygame.quit()
+            sys.exit()
 
 
 # ========================================================================
@@ -90,6 +107,14 @@ SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)
 
 game = MainGame()
+
+font = pygame.font.Font("arial.ttf", 20)
+
+
+def display_points():
+    score = font.render(f'Score: {game.points}', True, (0, 255, 0))
+    window.blit(score, (1, 1))
+
 
 while True:
     for event in pygame.event.get():
@@ -121,6 +146,7 @@ while True:
     # background-color -> black
     window.fill((0, 0, 0))
     game.draw_elements()
+    display_points()
     pygame.display.update()
     # framerate of the game
     clock.tick(60)
