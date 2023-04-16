@@ -116,14 +116,14 @@ class MainGame(object):
                         sys.exit()
 
             window.fill((255, 255, 255))
-            message_one = large_font.render('Paused', True, (0, 255, 0))
-            message_two = small_font.render(
+            message_paused = large_font.render('Paused', True, (0, 255, 0))
+            message_unpause = small_font.render(
                 'Click c to unpause', True, (0, 255, 0))
-            message_three = small_font.render(
+            message_quit = small_font.render(
                 'Click q to quit', True, (0, 255, 0))
-            window.blit(message_one, (250, 230))
-            window.blit(message_two, (238, 300))
-            window.blit(message_three, (238, 330))
+            window.blit(message_paused, (250, 230))
+            window.blit(message_unpause, (238, 300))
+            window.blit(message_quit, (238, 330))
             pygame.display.update()
             clock.tick(15)
 
