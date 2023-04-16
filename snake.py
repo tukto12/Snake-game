@@ -91,6 +91,42 @@ class MainGame(object):
             pygame.quit()
             sys.exit()
 
+    def display_points(self):
+        font = pygame.font.Font("arial.ttf", 20)
+        score = font.render(f'Score: {game.points}', True, (0, 255, 0))
+        window.blit(score, (1, 1))
+
+    def pause(self):
+        paused = True
+        large_font = pygame.font.Font("arial.ttf", 40)
+        small_font = pygame.font.Font("arial.ttf", 20)
+
+        while paused:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c:
+                        paused = False
+
+                    elif event.key == pygame.K_q:
+                        pygame.quit()
+                        sys.exit()
+
+            window.fill((255, 255, 255))
+            message_one = large_font.render('Paused', True, (0, 255, 0))
+            message_two = small_font.render(
+                'Click c to unpause', True, (0, 255, 0))
+            message_three = small_font.render(
+                'Click q to quit', True, (0, 255, 0))
+            window.blit(message_one, (250, 230))
+            window.blit(message_two, (238, 300))
+            window.blit(message_three, (238, 330))
+            pygame.display.update()
+            clock.tick(15)
+
 
 # ========================================================================
 pygame.init()
@@ -107,13 +143,6 @@ SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)
 
 game = MainGame()
-
-font = pygame.font.Font("arial.ttf", 20)
-
-
-def display_points():
-    score = font.render(f'Score: {game.points}', True, (0, 255, 0))
-    window.blit(score, (1, 1))
 
 
 while True:
@@ -143,10 +172,13 @@ while True:
                 if game.snake.move_direction.x != -1:
                     game.snake.move_direction = Vector2(1, 0)
 
+            if event.key == pygame.K_p:
+                game.pause()
+
     # background-color -> black
     window.fill((0, 0, 0))
     game.draw_elements()
-    display_points()
+    game.display_points()
     pygame.display.update()
     # framerate of the game
     clock.tick(60)
