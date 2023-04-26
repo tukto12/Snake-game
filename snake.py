@@ -45,7 +45,6 @@ class Food(object):
                                 self.food_position.y * cell_size, cell_size, cell_size)
         # draw the food
         pygame.draw.rect(window, (255, 0, 0), food_rect)
-        pass
 
     def random_food_position(self):
         self.x = random.randint(0, cell_numbers - 1)
@@ -76,6 +75,10 @@ class MainGame(object):
             # spawning new food
             self.food.random_food_position()
             self.snake.grow_snake()
+
+        for body in self.snake.body:
+            if self.food.food_position == body:
+                self.food.random_food_position()
 
     def check_snake_collision(self):
         # checking if the snake head hits his body
